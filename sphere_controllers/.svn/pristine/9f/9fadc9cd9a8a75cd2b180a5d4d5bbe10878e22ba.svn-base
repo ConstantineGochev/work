@@ -1,0 +1,70 @@
+import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import {Redirect} from "react-router-dom";
+import Balls from './Balls';
+import { Button, Segment } from 'semantic-ui-react';
+import {log_user} from '../actions';
+import HLSSource from './Video';
+import TableExampleCelledStriped from './State';
+import axios from 'axios';
+
+
+ 
+class Dashboard extends Component {
+    constructor(props) {
+        super()
+          this.state = {
+           
+        }
+    } 
+   render_layout() {
+       if(this.props.auth.authenticated) {
+           return (
+               <div>
+                   <Balls />
+               </div>
+           )
+       }else {
+           return (
+               <Redirect
+                   to={{
+                       pathname: "/",
+                       state: { from: this.props.location }
+                   }}
+               />
+           )
+       }
+   }
+   log_out = () => {
+      this.props.log_user(false)
+      this.props.history.push('/')
+
+   }
+
+    render() {
+
+        console.log(this.props.auth.token)
+        return (
+            <div>
+                <Button style={{ marginTop: '2%', marginLeft: '2%' }} type="submit" positive icon='log out' onClick={this.log_out} content='Log out' />
+                <div className='dashboard' style={{ marginLeft: '2%', marginRight: '2%', marginTop: '2%' }}>
+                    <div className='second_section'>
+                        <HLSSource />
+                        <Segment color='blue' >
+                            <TableExampleCelledStriped />
+                        </Segment>
+                    </div>
+                    {this.render_layout()}
+                </div>
+            </div>
+        );
+    }
+}
+
+function map_state_to_prop (state) {
+    return {
+        auth: state.auth
+    }
+}
+
+export default connect(map_state_to_prop, {log_user})(Dashboard);

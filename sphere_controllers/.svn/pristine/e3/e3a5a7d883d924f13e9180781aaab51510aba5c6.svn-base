@@ -1,0 +1,48 @@
+import React from 'react'
+import { Icon, Table } from 'semantic-ui-react'
+
+const TableExampleCelledStriped = () => (
+  <Table celled striped>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell colSpan='3'>STATE</Table.HeaderCell>
+      </Table.Row>
+    </Table.Header>
+
+    <Table.Body>
+      <Table.Row>
+        <Table.Cell collapsing>
+          <Icon name='game' /> GAME
+        </Table.Cell>
+        
+        <Table.Cell collapsing textAlign='right'>
+         #1234
+        </Table.Cell>
+      </Table.Row>
+      <Table.Row>
+        <Table.Cell>
+          <Icon name='time' /> START
+        </Table.Cell>
+       
+        <Table.Cell textAlign='right'>12:45</Table.Cell>
+      </Table.Row>
+      <Table.Row>
+        <Table.Cell>
+          <Icon name='file alternate' /> STATE
+        </Table.Cell>
+       
+        <Table.Cell textAlign='right'>NMB</Table.Cell>
+      </Table.Row>
+      <Table.Row>
+        <Table.Cell>
+          <Icon name='baseball ball' /> BALL
+        </Table.Cell>
+        
+        <Table.Cell textAlign='right'>#17</Table.Cell>
+      </Table.Row>
+    
+    </Table.Body>
+  </Table>
+)
+
+export default TableExampleCelledStriped

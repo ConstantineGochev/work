@@ -1,0 +1,44 @@
+import React, { Component} from 'react';
+import Ball from './Ball';
+import {Segment } from 'semantic-ui-react';
+
+function importAll(r) {
+    return r.keys().map(r);
+  }
+
+const images = importAll(require.context('../imgs', false, /\.(png|jpe?g|svg)$/));
+
+class Balls extends Component {
+    constructor(props) {
+        super()
+        this.state = {
+            selected_ball: ''
+        }
+    }
+    render_balls() {
+        console.log(images)
+      return images.map((img, i) => {
+          return <Ball key={i} img={img} click_ball={this.on_ball_click} />
+      })
+    }
+    on_ball_click (e) {
+        console.log('ball is clicked', e)
+
+    }
+    render () {
+        return (
+            
+            <div style={{marginTop: '2%', marginBottom: '2%'}} className='balls-content'>
+                <Segment >
+                    
+                    {this.render_balls()}
+                    
+                </Segment>
+            </div>
+           
+        )
+    }
+}
+
+
+export default Balls

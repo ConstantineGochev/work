@@ -1,0 +1,192 @@
+import React from 'react'
+import {connect } from 'react-redux'
+import axios from 'axios'
+import { Icon, Table, Step, Segment, Label,Form,Radio, Button } from 'semantic-ui-react'
+
+class StateTable extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      selected_state: 0,
+      states: [0,1,2,3]
+    }
+    this.state_0 = React.createRef()
+    this.state_1 = React.createRef()
+    this.state_2 = React.createRef()
+    this.state_3 = React.createRef()
+  
+  }
+  componentDidMount() {
+    this.forceUpdate()
+  }
+
+  determine_state (s) {
+  //console.log(this.state_0)
+   if(s.current === null ) return 
+   if(s.current.props.index === this.props.current_state) {
+     return true
+   }
+    return false    
+  }
+  handleChange = (e, { value }) => this.setState({ selected_state: value })
+  change_state  = () => {
+    let post_options = {
+      method: 'POST',
+      url: 'https://10.10.0.198:8160/control',
+      headers: { 'token': this.props.auth.token },
+      data: {
+        "state": this.state.selected_state,
+        "ball": 90,
+        "change": {},
+        "stop": false
+      }
+    }
+
+    //const self = this
+    axios(post_options).then((res) => {
+      console.log(res)
+      // self.setState({
+      //     response: res
+      // })
+
+    }).catch(err => console.log(err))
+  }
+
+  render() {
+   // console.log(this.props.current_state)
+
+    return (
+      <div>
+
+        <Segment>
+          <Table celled striped>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell colSpan='3'>Game Statistics</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell collapsing>
+                  <Icon name='game' /> GAME
+        </Table.Cell>
+
+                <Table.Cell collapsing textAlign='right'>
+                  {this.props.game_id}
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>
+                  <Icon name='time' /> START
+        </Table.Cell>
+
+                <Table.Cell textAlign='right'>12:45</Table.Cell>
+              </Table.Row>
+
+              <Table.Row>
+                <Table.Cell>
+                  <Icon name='baseball ball' /> BALL
+          </Table.Cell>
+
+                <Table.Cell textAlign='right'>#17</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell >
+                  <Button onClick={this.change_state} >CHANGE STATE </Button>
+                </Table.Cell>
+                <Table.Cell>
+                  <Form>
+                    <Form.Field>
+                      Selected state: <b>{this.state.selected_state}</b>
+                    </Form.Field>
+                    <Form.Field>
+                      <Radio
+                        label='IDLE'
+                        name='radioGroup'
+                        value={0}
+                        checked={this.state.selected_state === 0}
+                        onChange={this.handleChange}
+                      />
+                    </Form.Field>
+                    <Form.Field>
+                      <Radio
+                        label='BET PLEASE'
+                        name='radioGroup'
+                        value={1}
+                        checked={this.state.selected_state === 1}
+                        onChange={this.handleChange}
+                      />
+                    </Form.Field>
+                    <Form.Field>
+                      <Radio
+                        label='NMB'
+                        name='radioGroup'
+                        value={2}
+                        checked={this.state.selected_state === 2}
+                        onChange={this.handleChange}
+                      />
+                    </Form.Field>
+                    <Form.Field>
+                      <Radio
+                        label='END GAME'
+                        name='radioGroup'
+                        value={3}
+                        checked={this.state.selected_state === 3}
+                        onChange={this.handleChange}
+                      />
+                    </Form.Field>
+                  </Form>
+                </Table.Cell>
+
+              </Table.Row>
+
+            </Table.Body>
+          </Table>
+        </Segment>
+        <Label> GAME STATES </Label>
+        <Segment >
+          <Step.Group fluid  widths={4}>
+            <Step active={this.determine_state(this.state_0)} index={this.state.states[0]} ref={this.state_0}>
+              <Icon name='hourglass outline' />
+              <Step.Content>
+                <Step.Title>IDLE</Step.Title>
+                <Step.Description>Starting state of the game</Step.Description>
+              </Step.Content>
+            </Step>
+            <Step active={this.determine_state(this.state_1)} index={this.state.states[1]} ref={this.state_1}>
+              <Icon name='hourglass start' />
+              <Step.Content>
+                <Step.Title>BETPLEASE</Step.Title>
+                <Step.Description>Betting phase of the game </Step.Description>
+              </Step.Content>
+            </Step>
+            <Step active={this.determine_state(this.state_2)} index={this.state.states[2]} ref={this.state_2}>
+              <Icon name='hourglass half' />
+              <Step.Content>
+                <Step.Title>NMB</Step.Title>
+                <Step.Description>Can`t place bets, the balls being drawn</Step.Description>
+              </Step.Content>
+            </Step>
+            <Step active={this.determine_state(this.state_3)} index={this.state.states[3]} ref={this.state_3}>
+              <Icon name='hourglass end' />
+              <Step.Content>
+                <Step.Title>ENDGAME</Step.Title>
+                <Step.Description>End of the game </Step.Description>
+              </Step.Content>
+            </Step>
+          </Step.Group>
+        </Segment>
+
+      </div>
+
+    )
+  }
+}
+function map_state_to_props (state) {
+  return {
+    auth: state.auth
+  }
+}
+
+export default connect(map_state_to_props,{})(StateTable)

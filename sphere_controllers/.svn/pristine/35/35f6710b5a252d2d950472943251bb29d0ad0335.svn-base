@@ -1,0 +1,10 @@
+import React, {Component} from 'react'
+
+class Ball extends Component {
+    render() {
+        return <img style={{height:'70px',width: '70px',margin: 'auto', justifyContent: 'center', display: 'flex'}} src={this.props.img} onClick={this.props.click_ball} />
+        
+    }
+}
+
+export default Ball
